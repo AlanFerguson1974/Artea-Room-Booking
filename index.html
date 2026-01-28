@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Book a table – The Artea Room</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    /* ===== COLOURS (roughly matched to your logo) ===== */
+    :root {
+      --artea-cream: #f7f1e9;
+      --artea-green: #4f7b6a;
+      --artea-green-dark: #395a4d;
+      --artea-ink: #233546;
+      --artea-accent: #e6c9a5;
+      --error-red: #b3261e;
+      --error-bg: #f3e0e0;
+    }
+
+    /* ===== GLOBAL ===== */
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 2.5rem 1.25rem 3rem;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--artea-cream);
+      color: var(--artea-ink);
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 2.5rem;
+      background: #ffffffcc;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    header { text-align: center; margin-bottom: 1.5rem; }
+
+    .logo-mark {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid var(--artea-green);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--artea-green);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      margin: 0 0 .25rem;
+      font-size: 1.6rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--artea-ink);
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: .95rem;
+      text-transform: none;
+      letter-spacing: 0.15em;
+      color: #66788a;
+    }
+
+    p.intro {
+      margin-top: 1.25rem;
+      font-size: 0.95rem;
+      color: #445266;
+    }
+
+    /* ===== FORM LAYOUT ===== */
+    form { margin-top: 1.25rem; display: grid; gap: 1.25rem; }
+
+    .form-grid-2 { display: grid; gap: 1rem; }
+
+    @media (min-width: 640px) {
+      .form-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    .form-group { margin-bottom: 0.25rem; }
+
+    .form-group--error {
+      border-left: 4px solid var(--error-red);
+      padding-left: 0.75rem;
+    }
+
+    label {
+      font-weight: 580;
+      font-size: 0.95rem;
+      display: inline-block;
+      margin-bottom: 0.35rem;
+    }
+
+    .hint {
+      display: block;
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: #5c6a7a;
+      margin-top: 0.1rem;
+    }
+
+    .required-mark {
+      color: var(--error-red);
+      font-weight: 600;
+      margin-left: 0.15rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #c6ccd4;
+      font: inherit;
+      background: white;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid var(--artea-green);
+      outline-offset: 1px;
+      border-color: var(--artea-green);
+    }
+
+    input[aria-invalid="true"],
+    select[aria-invalid="true"],
+    textarea[aria-invalid="true"] { border-color: var(--error-red); }
+
+    fieldset {
+      border-radius: 12px;
+      border: 1px solid #d5dde7;
+      padding: 1rem 1rem 1.1rem;
+      margin: 0;
+    }
+
+    legend {
+      font-weight: 620;
+      font-size: 0.95rem;
+      padding: 0 0.25rem;
+      color: var(--artea-ink);
+    }
+
+    .option-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .option-row label {
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0;
+    }
+
+    textarea { min-height: 80px; resize: vertical; }
+
+    button[type="submit"] {
+      border: none;
+      border-radius: 999px;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      background: var(--artea-green);
+      color: #fff;
+      cursor: pointer;
+      align-self: flex-start;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    button[type="submit"]:hover { background: var(--artea-green-dark); }
+
+    button[type="submit"]:focus-visible {
+      outline: 3px solid var(--artea-accent);
+      outline-offset: 2px;
+    }
+
+    /* ===== ERROR SUMMARY & MESSAGES ===== */
+    .error-summary {
+      border: 4px solid var(--error-red);
+      padding: 1rem 1.25rem;
+      background: var(--error-bg);
+      margin-bottom: 1rem;
+    }
+
+    .error-summary h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+    .error-summary ul { margin: 0; padding-left: 1.25rem; }
+    .error-summary a { color: #0b0c0c; text-decoration: underline; }
+
+    .message {
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .message--info {
+      background: #e7f3ec;
+      border: 1px solid #b6d8c7;
+      color: #24402f;
+    }
+
+    .error-message {
+      margin: 0.35rem 0 0;
+      font-size: 0.87rem;
+      color: var(--error-red);
+    }
+
+    .hidden { display: none !important; }
+
+    /* ===== REVIEW CARD (Step 4) ===== */
+    .review-card {
+      background: #fbfbfd;
+      border: 1px solid #e6e9ee;
+      border-radius: 10px;
+      padding: 1rem;
+      max-height: 360px;
+      overflow: auto;
+      font-size: 0.95rem;
+      color: #233546;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .review-section + .review-section { margin-top: 0.9rem; padding-top: 0.6rem; border-top: 1px dashed #e9edf3; }
+
+    .review-section h3 {
+      margin: 0 0 0.45rem 0;
+      font-size: 0.95rem;
+      color: var(--artea-green-dark);
+    }
+
+    .review-row { display: grid; grid-template-columns: 180px 1fr; gap: 0.25rem 1rem; align-items: start; }
+    .review-label { font-weight: 700; color: #445266; }
+    .review-value { color: #2b3b48; }
+
+
+    /* ===== GUEST DIETARY CARDS ===== */
+    .guest-fieldset {
+      margin-top: 0.85rem;
+      padding: 0.8rem 1rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid #e0e5ec;
+      background: #f8faf9;
+    }
+
+    .guest-legend {
+      font-weight: 550;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      color: var(--artea-ink);
+    }
+
+    .guest-grid { display: grid; gap: 0.5rem; }
+
+    /* Highlight guest dietary dropdowns if they’re missing */
+    select.guest-diet-error { border-color: var(--error-red); }
+
+    /* Hide all steps by default to prevent showing them before JS runs */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    /* ===== STEP ACTION BUTTONS ===== */
+    .step-actions { display: flex; gap: 0.75rem; margin-top: 1rem; }
+
+    /* Primary action (Next) — very visible */
+    button[data-action="next"] {
+      background: var(--artea-green);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(79,123,106,0.18);
+      cursor: pointer;
+      font-size: 0.98rem;
+    }
+    button[data-action="next"]:hover { background: var(--artea-green-dark); }
+    button[data-action="next"]:focus-visible { outline: 3px solid var(--artea-accent); outline-offset: 3px; }
+
+    /* Secondary action (Back) — clear outline */
+    button[data-action="prev"] {
+      background: transparent;
+      color: var(--artea-green-dark);
+      border: 2px solid var(--artea-green);
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.98rem;
+    }
+    button[data-action="prev"]:hover { background: #f2fbf6; }
+    button[data-action="prev"]:focus-visible { outline: 3px solid var(--artea-accent); outline-offset: 3px; }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header>
+      <div class="logo-mark" aria-hidden="true">☕</div>
+      <h1>The Artea Room</h1>
+      <p class="subtitle">COUNTRYSIDE CAFE &amp; GIFT SHOP</p>
+      <p class="intro">
+        Use this form to request a table or book Afternoon Tea. We’ll check availability and confirm
+        your booking by email – your request isn’t confirmed until you hear back from us.
+      </p>
+    </header>
+
+    <!-- GOV.UK style error summary -->
+    <div id="error-summary" class="error-summary hidden" role="alert" aria-labelledby="error-summary-title" tabindex="-1">
+      <h2 id="error-summary-title">There is a problem</h2>
+      <ul id="error-summary-list"></ul>
+    </div>
+
+    <!-- Info message (kept for screen readers if needed) -->
+    <div id="info-message" class="message message--info hidden" aria-live="polite" role="status"></div>
+
+    <form id="booking-form" action="https://formspree.io/f/xovoqvzw" method="POST" novalidate>
+      <input type="hidden" name="_redirect" value="https://www.artearoom.co.uk/artea-room-table-form-submission">
+      <textarea id="booking_summary" name="Booking summary" class="hidden"></textarea>
+
+      <div class="progress" aria-hidden="true">
+        <div class="step-meta" id="step-meta" aria-live="polite">Step 1 of 4</div>
+        <div class="progress-bar-wrap" aria-hidden="true">
+          <div id="progress-bar" class="progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <!-- Step 1: Contact -->
+        <div class="step active" data-step="contact" id="step-contact">
+          <h2>Contact details</h2>
+          <div class="form-grid-2">
+            <div id="form-group-first_name" class="form-group">
+              <label for="first_name">First name <span class="required-mark">*</span></label>
+              <input id="first_name" name="first_name" type="text" autocomplete="given-name" required>
+            </div>
+            <div id="form-group-last_name" class="form-group">
+              <label for="last_name">Last name <span class="required-mark">*</span></label>
+              <input id="last_name" name="last_name" type="text" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div id="form-group-email" class="form-group">
+              <label for="email">Email <span class="required-mark">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div id="form-group-tel" class="form-group">
+              <label for="tel">Telephone <span class="required-mark">*</span></label>
+              <input id="tel" name="tel" type="tel" autocomplete="tel" required>
+              <span class="hint">For any questions or last-minute changes.</span>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-ghost" data-action="next">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Booking type -->
+        <div class="step" data-step="type" id="step-type">
+          <h2>Booking type</h2>
+          <fieldset id="form-group-booking_type">
+            <legend>What are you booking? <span class="required-mark">*</span></legend>
+            <div class="option-row">
+              <label><input type="radio" name="booking_type" value="regular" required> Regular table booking</label>
+              <label><input type="radio" name="booking_type" value="afternoon_tea" required> Afternoon Tea booking</label>
+            </div>
+            <span class="hint">Afternoon Tea bookings must be made at least 48 hours in advance.</span>
+          </fieldset>
+
+            <div id="afternoon-tea-info" class="message message--info hidden" aria-hidden="true">
+              <p style="margin:0 0.5rem 0.5rem 0">If you’re booking an Afternoon Tea with a gift voucher, we'll ask you for the voucher type and voucher number once you've selected your day and time of booking. You must provide this when booking. We can’t accept it on the day.</p>
+              <ul style="margin:0 0 0 1.1rem; padding:0.25rem 0 0 1rem; color:#2b3b48">
+                <li><strong>The Artea Room gift vouchers:</strong> accepted Tuesday to Sunday (subject to availability).</li>
+                <li><strong>Buyagift vouchers:</strong> accepted Tuesday to Friday (subject to availability). Buyagift cannot be used for Saturday or Sunday bookings.</li>
+              </ul>
+            </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-ghost" data-action="prev">Back</button>
+            <button type="button" class="btn-ghost" data-action="next">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Booking details (date/time/party size) -->
+        <div class="step" data-step="booking" id="step-booking">
+          <h2>Booking details</h2>
+          <div class="form-grid-2">
+            <div id="form-group-date" class="form-group">
+              <label for="date">Date <span class="required-mark">*</span></label>
+              <input id="date" name="date_iso" type="date" required>
+              <input id="date_formatted" name="date" type="hidden">
+            </div>
+            <div id="form-group-time" class="form-group">
+              <label for="time">Time <span class="required-mark">*</span></label>
+              <select id="time" name="time" required aria-label="Time" disabled>
+                <option value="">Select a time</option>
+              </select>
+              <span id="time-hint-afternoon" class="hint hidden">Afternoon Tea is served Tuesday to Sunday between 11:30 am and 2:30 pm. For Afternoon Tea bookings we require at least 48 hours’ notice.</span>
+            </div>
+          </div>
+
+          <div id="form-group-party_size" class="form-group">
+            <label for="party_size">Number of guests (maximum 8) <span class="required-mark">*</span></label>
+            <select id="party_size" name="party_size" required>
+              <option value="">Select an option</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+            <span class="hint">For groups of 9 or more, please call 01327 810245 or email enquiries@artearoom.co.uk.</span>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-ghost" data-action="prev">Back</button>
+            <button type="button" class="btn-ghost" data-action="next">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Afternoon Tea details (conditionally shown) -->
+        <div class="step hidden" data-step="afternoon" id="step-afternoon">
+          <h2>Afternoon Tea details</h2>
+          <section id="afternoon-tea-section" aria-label="Afternoon Tea details">
+            <fieldset id="form-group-payment_method">
+              <legend>Voucher or payment <span class="required-mark">*</span></legend>
+              <div class="option-row">
+                <label><input type="radio" name="payment_method" value="buyagift"> Buyagift voucher</label>
+                <label><input type="radio" name="payment_method" value="artea_voucher"> The Artea Room gift voucher</label>
+                <label><input type="radio" name="payment_method" value="pay_on_day"> Pay on the day</label>
+              </div>
+              <span class="hint">If you have a voucher for 2 guests but you’re bringing more, that’s fine – you can tell us below how many guests are covered by the voucher and how many will pay on the day.</span>
+              <span id="buyagift-warning" class="hint hidden">Buyagift vouchers are only accepted Tuesday to Friday (subject to availability). Please choose another voucher type or a different date.</span>
+            </fieldset>
+
+            <div id="form-group-tea_package" class="form-group hidden">
+              <label for="tea_package">Afternoon Tea option <span class="required-mark">*</span></label>
+              <select id="tea_package" name="tea_package">
+                <option value="">Select an option</option>
+              </select>
+              <span id="tea-package-hint" class="hint"></span>
+            </div>
+
+            <div id="form-group-voucher_number" class="form-group hidden">
+              <label for="voucher_number">Voucher number <span class="required-mark">*</span></label>
+              <input id="voucher_number" name="voucher_number" type="text">
+            </div>
+
+            <div id="form-group-voucher_covers" class="form-group hidden">
+              <label for="voucher_covers">How many guests does your voucher cover? <span class="required-mark">*</span></label>
+              <input id="voucher_covers" name="voucher_covers" type="number" inputmode="numeric" min="1" step="1" value="2">
+              <span class="hint">Any additional guests will pay on the day. We’ll confirm totals by email.</span>
+            </div>
+
+            <fieldset>
+              <legend>Dietary requirements</legend>
+              <p class="hint">Our Afternoon Tea is a set menu, but we can offer gluten free, vegan, vegetarian or dairy free options – or a mix of up to two of these per booking. All dietary requirements must be provided at the time of booking so we can make sure we can accommodate your guests’ needs. We’re unable to cater for dietary changes on the day.</p>
+              <div id="guest-dietary-container"></div>
+            </fieldset>
+          </section>
+
+          <div class="step-actions">
+            <button type="button" class="btn-ghost" data-action="prev">Back</button>
+            <button type="button" class="btn-ghost" data-action="next">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="step" data-step="review" id="step-review">
+          <h2>Review & Submit</h2>
+          <p class="hint">Check your booking details below. We’ll confirm availability by email.</p>
+          <div id="review-summary" class="review-card" aria-live="polite"></div>
+
+          <div id="form-group-other_requirements" class="form-group">
+            <label for="other_requirements">Other requirements</label>
+            <textarea id="other_requirements" name="other_requirements" placeholder="For example, accessibility needs or space for a pram."></textarea>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-ghost" data-action="prev">Back</button>
+            <button type="submit">Submit booking request</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const bookingForm = document.getElementById('booking-form');
+
+    const bookingTypeInputs = bookingForm.querySelectorAll('input[name="booking_type"]');
+    const afternoonSection = document.getElementById('afternoon-tea-section');
+
+    const partySizeSelect = document.getElementById('party_size');
+    const guestContainer = document.getElementById('guest-dietary-container');
+
+    const errorSummary = document.getElementById('error-summary');
+    const errorSummaryList = document.getElementById('error-summary-list');
+    const infoMessage = document.getElementById('info-message');
+
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+
+    const bookingSummaryField = document.getElementById('booking_summary');
+
+    // Afternoon Tea flow fields
+    const paymentMethodInputs = bookingForm.querySelectorAll('input[name="payment_method"]');
+    const teaPackageGroup = document.getElementById('form-group-tea_package');
+    const teaPackageSelect = document.getElementById('tea_package');
+    const teaPackageHint = document.getElementById('tea-package-hint');
+
+    const voucherNumberGroup = document.getElementById('form-group-voucher_number');
+    const voucherNumberInput = document.getElementById('voucher_number');
+
+    const voucherCoversGroup = document.getElementById('form-group-voucher_covers');
+    const voucherCoversInput = document.getElementById('voucher_covers');
+    const timeHintAfternoon = document.getElementById('time-hint-afternoon');
+    const buyagiftWarning = document.getElementById('buyagift-warning');
+    const afternoonInfo = document.getElementById('afternoon-tea-info');
+
+    function updateAfternoonInfoVisibility() {
+      if (!afternoonInfo) return;
+      if (getBookingType() === 'afternoon_tea') showSection(afternoonInfo);
+      else hideSection(afternoonInfo);
+    }
+
+    function updateBuyagiftAvailability() {
+      const buyagiftRadio = bookingForm.querySelector('input[name="payment_method"][value="buyagift"]');
+      if (!buyagiftRadio) return;
+
+      // If date selected and it's Saturday(6) or Sunday(0), disable Buyagift
+      if (dateInput.value) {
+        const p = dateInput.value.split('-').map(Number);
+        if (p.length === 3) {
+          const d = new Date(p[0], p[1] - 1, p[2]);
+          const day = d.getDay();
+          if (day === 6 || day === 0) {
+            buyagiftRadio.disabled = true;
+            if (buyagiftRadio.checked) {
+              buyagiftRadio.checked = false;
+              // force tea package UI to update
+              updateTeaPackageOptions();
+            }
+            if (buyagiftWarning) showSection(buyagiftWarning);
+            return;
+          }
+        }
+      }
+
+      // otherwise enable and hide warning
+      buyagiftRadio.disabled = false;
+      if (buyagiftWarning) hideSection(buyagiftWarning);
+    }
+
+    function updateTimeHintVisibility() {
+      if (!timeHintAfternoon) return;
+      if (getBookingType() === 'afternoon_tea') showSection(timeHintAfternoon);
+      else hideSection(timeHintAfternoon);
+    }
+
+    function getBookingType() {
+      return Array.from(bookingTypeInputs).find(i => i.checked)?.value || null;
+    }
+
+    function getPaymentMethod() {
+      return Array.from(paymentMethodInputs).find(i => i.checked)?.value || null;
+    }
+
+    function showSection(el) { el.classList.remove('hidden'); }
+    function hideSection(el) { el.classList.add('hidden'); }
+
+    /* ===== LIMIT PARTY SIZE FOR AFTERNOON TEA (no 1-guest bookings) ===== */
+    function updatePartySizeOptions() {
+      const type = getBookingType();
+      const optionOne = partySizeSelect.querySelector('option[value="1"]');
+      if (!optionOne) return;
+
+      if (type === 'afternoon_tea') {
+        optionOne.disabled = true;
+        optionOne.hidden = true;
+        if (partySizeSelect.value === '1') partySizeSelect.value = '';
+      } else {
+        optionOne.disabled = false;
+        optionOne.hidden = false;
+      }
+    }
+
+    /* ===== ERROR HELPERS ===== */
+    function clearAllErrors() {
+      errorSummary.classList.add('hidden');
+      errorSummaryList.innerHTML = '';
+      infoMessage.classList.add('hidden');
+      infoMessage.textContent = '';
+
+      const groups = bookingForm.querySelectorAll('.form-group, fieldset');
+      groups.forEach(g => g.classList.remove('form-group--error'));
+
+      const inputs = bookingForm.querySelectorAll('input, select, textarea');
+      inputs.forEach(i => {
+        i.removeAttribute('aria-invalid');
+        const describedby = i.getAttribute('aria-describedby');
+        if (describedby) {
+          const clean = describedby.split(' ').filter(id => !id.startsWith('error-')).join(' ');
+          if (clean) i.setAttribute('aria-describedby', clean);
+          else i.removeAttribute('aria-describedby');
+        }
+      });
+
+      const dietErrorSelects = bookingForm.querySelectorAll('select.guest-diet-error');
+      dietErrorSelects.forEach(sel => sel.classList.remove('guest-diet-error'));
+
+      const messages = bookingForm.querySelectorAll('.error-message');
+      messages.forEach(m => m.remove());
+    }
+
+    function clearFieldError(fieldId) {
+      const group = document.getElementById('form-group-' + fieldId) ||
+                    document.getElementById('form-group-' + fieldId.replace(/_/g, '-'));
+      if (!group) return;
+
+      group.classList.remove('form-group--error');
+      const msg = group.querySelector('#error-' + fieldId);
+      if (msg) msg.remove();
+
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.removeAttribute('aria-invalid');
+        const describedby = field.getAttribute('aria-describedby') || '';
+        const clean = describedby.split(' ')
+          .filter(id => id && id !== ('error-' + fieldId))
+          .join(' ');
+        if (clean) field.setAttribute('aria-describedby', clean);
+        else field.removeAttribute('aria-describedby');
+      }
+    }
+
+    function setFieldError(fieldId, message) {
+      const group = document.getElementById('form-group-' + fieldId);
+      const field = document.getElementById(fieldId);
+      if (!group || !field) return;
+
+      group.classList.add('form-group--error');
+      field.setAttribute('aria-invalid', 'true');
+
+      let msg = group.querySelector('#error-' + fieldId);
+      if (!msg) {
+        msg = document.createElement('p');
+        msg.id = 'error-' + fieldId;
+        msg.className = 'error-message';
+        group.appendChild(msg);
+      }
+      msg.textContent = message;
+
+      const existing = field.getAttribute('aria-describedby') || '';
+      const tokens = existing.split(' ').filter(Boolean);
+      if (!tokens.includes(msg.id)) {
+        tokens.push(msg.id);
+        field.setAttribute('aria-describedby', tokens.join(' '));
+      }
+    }
+
+    function showErrors(errors, { focusSummary } = { focusSummary: true }) {
+      if (!errors.length) {
+        errorSummary.classList.add('hidden');
+        errorSummaryList.innerHTML = '';
+        return;
+      }
+
+      errorSummaryList.innerHTML = '';
+      errors.forEach(err => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = '#' + err.fieldId;
+        link.textContent = err.message;
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const field = document.getElementById(err.fieldId);
+          if (field) field.focus();
+        });
+        li.appendChild(link);
+        errorSummaryList.appendChild(li);
+      });
+
+      errorSummary.classList.remove('hidden');
+      if (focusSummary) errorSummary.focus();
+    }
+
+    /* ===== AFTERNOON TEA UX FLOW ===== */
+    function resetAfternoonTeaFlow() {
+      // payment method radios
+      paymentMethodInputs.forEach(r => r.checked = false);
+
+      // tea package
+      teaPackageSelect.innerHTML = '<option value="">Select an option</option>';
+      teaPackageSelect.value = '';
+      teaPackageSelect.removeAttribute('required');
+      hideSection(teaPackageGroup);
+      teaPackageHint.textContent = '';
+
+      // voucher fields
+      voucherNumberInput.value = '';
+      voucherNumberInput.removeAttribute('required');
+      hideSection(voucherNumberGroup);
+
+      voucherCoversInput.value = '2';
+      voucherCoversInput.removeAttribute('required');
+      hideSection(voucherCoversGroup);
+
+      // clear any field errors
+      clearFieldError('tea_package');
+      clearFieldError('voucher_number');
+      clearFieldError('voucher_covers');
+    }
+
+    function updateVoucherCoversMax() {
+      const guests = parseInt(partySizeSelect.value, 10);
+      if (isNaN(guests) || guests <= 0) return;
+
+      voucherCoversInput.max = String(guests);
+
+      // If someone reduces party size, keep voucher_covers valid
+      const covers = parseInt(voucherCoversInput.value, 10);
+      if (!isNaN(covers) && covers > guests) voucherCoversInput.value = String(guests);
+      if (!isNaN(covers) && covers < 1) voucherCoversInput.value = '1';
+    }
+
+    function updateTeaPackageOptions() {
+      const method = getPaymentMethod();
+
+      // Always show the tea package group once method is chosen (for Afternoon Tea)
+      if (!method) {
+        hideSection(teaPackageGroup);
+        teaPackageSelect.removeAttribute('required');
+        teaPackageSelect.innerHTML = '<option value="">Select an option</option>';
+        teaPackageHint.textContent = '';
+        return;
+      }
+
+      showSection(teaPackageGroup);
+      teaPackageSelect.setAttribute('required', 'required');
+
+      // Clear existing options and rebuild
+      teaPackageSelect.innerHTML = '<option value="">Select an option</option>';
+
+      if (method === 'buyagift') {
+        teaPackageHint.textContent = 'Choose the Afternoon Tea option on your Buyagift voucher.';
+        teaPackageSelect.insertAdjacentHTML('beforeend', `
+          <option value="buyagift_regular">Buyagift Regular Afternoon Tea</option>
+          <option value="buyagift_luxury">Buyagift Luxury Afternoon Tea</option>
+        `);
+
+        // Voucher fields shown + required
+        showSection(voucherNumberGroup);
+        voucherNumberInput.setAttribute('required', 'required');
+
+        showSection(voucherCoversGroup);
+        voucherCoversInput.setAttribute('required', 'required');
+        updateVoucherCoversMax();
+
+      } else if (method === 'artea_voucher') {
+        teaPackageHint.textContent = 'Choose the Afternoon Tea option you are redeeming with your Artea Room gift voucher.';
+        teaPackageSelect.insertAdjacentHTML('beforeend', `
+          <option value="artea_signature">The Artea Room Signature Afternoon Tea</option>
+          <option value="artea_signature_bubbles">The Artea Room Signature Afternoon Tea with Prosecco or Nozecco</option>
+        `);
+
+        // Voucher fields shown + required
+        showSection(voucherNumberGroup);
+        voucherNumberInput.setAttribute('required', 'required');
+
+        showSection(voucherCoversGroup);
+        voucherCoversInput.setAttribute('required', 'required');
+        updateVoucherCoversMax();
+
+      } else if (method === 'pay_on_day') {
+        teaPackageHint.textContent = 'Choose the Afternoon Tea option for your booking.';
+        teaPackageSelect.insertAdjacentHTML('beforeend', `
+          <option value="signature_25">Signature Afternoon Tea (£25)</option>
+          <option value="signature_bubbles_30">Signature Afternoon Tea with Prosecco or Nozecco (£30)</option>
+        `);
+
+        // Voucher fields hidden + not required
+        hideSection(voucherNumberGroup);
+        voucherNumberInput.value = '';
+        voucherNumberInput.removeAttribute('required');
+
+        hideSection(voucherCoversGroup);
+        voucherCoversInput.value = '2';
+        voucherCoversInput.removeAttribute('required');
+      }
+
+      // Clear related errors when method changes
+      clearFieldError('tea_package');
+      clearFieldError('voucher_number');
+      clearFieldError('voucher_covers');
+    }
+
+    // When booking type changes, show/hide Afternoon Tea section
+    bookingTypeInputs.forEach(input => {
+      input.addEventListener('change', () => {
+        const type = getBookingType();
+
+        if (type === 'afternoon_tea') {
+          showSection(afternoonSection);
+          validateTeaTiming(true);
+
+          // Reset flow so it starts with voucher/pay question
+          resetAfternoonTeaFlow();
+        } else {
+          hideSection(afternoonSection);
+          resetAfternoonTeaFlow();
+          clearFieldError('date');
+          clearFieldError('time');
+          showErrors([], { focusSummary: false });
+        }
+
+        updatePartySizeOptions();
+        updateTimeConstraints();
+        updateTimeHintVisibility();
+        updateAfternoonInfoVisibility();
+        updateBuyagiftAvailability();
+      });
+    });
+
+    // Payment method selection drives next step
+    paymentMethodInputs.forEach(r => {
+      r.addEventListener('change', updateTeaPackageOptions);
+    });
+
+    // When party size changes, keep voucher cover max in sync
+    partySizeSelect.addEventListener('change', () => {
+      updateVoucherCoversMax();
+    });
+
+    // Keep voucher covers valid if user edits it
+    voucherCoversInput.addEventListener('change', () => {
+      updateVoucherCoversMax();
+    });
+
+    /* ===== GUEST DIETARY CARDS ===== */
+    partySizeSelect.addEventListener('change', () => {
+      const count = parseInt(partySizeSelect.value, 10);
+      guestContainer.innerHTML = '';
+
+      if (!count || isNaN(count)) return;
+
+      for (let i = 1; i <= count; i++) {
+        const fs = document.createElement('fieldset');
+        fs.className = 'guest-fieldset';
+
+        const legend = document.createElement('div');
+        legend.className = 'guest-legend';
+        legend.textContent = `Guest ${i} dietary requirements`;
+        fs.appendChild(legend);
+
+        // Adult / child toggle
+        const typeRow = document.createElement('div');
+        typeRow.className = 'option-row';
+        const adultLabel = document.createElement('label');
+        adultLabel.innerHTML = `<input type="radio" name="guest_${i}_type" value="adult" checked> Adult`;
+        const childLabel = document.createElement('label');
+        childLabel.innerHTML = `<input type="radio" name="guest_${i}_type" value="child"> Child (10 and under)`;
+        typeRow.appendChild(adultLabel);
+        typeRow.appendChild(childLabel);
+        fs.appendChild(typeRow);
+
+        const grid = document.createElement('div');
+        grid.className = 'guest-grid';
+
+        const labelSelect = document.createElement('label');
+        labelSelect.textContent = 'Dietary requirement';
+        const select = document.createElement('select');
+        select.name = `guest_${i}_diet`;
+        select.innerHTML = `
+          <option value="">Select an option</option>
+          <option value="none">No special dietary requirements</option>
+          <option value="gluten_free">Gluten free</option>
+          <option value="dairy_free">Dairy free</option>
+          <option value="vegan">Vegan</option>
+          <option value="vegetarian">Vegetarian</option>
+        `;
+        labelSelect.appendChild(select);
+        grid.appendChild(labelSelect);
+
+        const labelNotes = document.createElement('label');
+        labelNotes.textContent = 'Allergens or additional details (please list any food allergies or intolerances)';
+        const textarea = document.createElement('textarea');
+        textarea.name = `guest_${i}_diet_notes`;
+        textarea.rows = 2;
+        textarea.placeholder = 'For example: Peanuts — severe allergy (please state)';
+        labelNotes.appendChild(textarea);
+        grid.appendChild(labelNotes);
+
+        fs.appendChild(grid);
+        guestContainer.appendChild(fs);
+      }
+    });
+
+    /* ===== HELPERS FOR DATE/TIME ===== */
+    function getBookingDateTime() {
+      const dateStr = dateInput.value;
+      const timeStr = timeInput.value;
+      if (!dateStr || !timeStr) return null;
+
+      const partsDate = dateStr.split('-').map(Number);
+      const partsTime = timeStr.split(':').map(Number);
+      if (partsDate.length !== 3 || partsTime.length < 2) return null;
+
+      const [year, month, day] = partsDate;
+      const [hour, minute] = partsTime;
+      return new Date(year, month - 1, day, hour, minute);
+    }
+
+    /* ===== OPENING HOURS & TIME CONSTRAINTS ===== */
+    function updateTimeConstraints() {
+      // Clear any previous info
+      infoMessage.classList.add('hidden');
+      infoMessage.textContent = '';
+
+      const dateStr = dateInput.value;
+      // default: allow time input and 15-minute steps
+      timeInput.removeAttribute('min');
+      timeInput.removeAttribute('max');
+      timeInput.disabled = false;
+
+      if (!dateStr) return;
+
+      const parts = dateStr.split('-').map(Number);
+      if (parts.length !== 3) return;
+      const [y, m, d] = parts;
+      const dt = new Date(y, m - 1, d);
+      const day = dt.getDay(); // 0=Sun,1=Mon,...6=Sat
+
+      // Monday closed
+      if (day === 1) {
+        timeInput.value = '';
+        timeInput.disabled = true;
+        setFieldError('date', 'We are closed on Mondays. Please choose another date.');
+        infoMessage.classList.remove('hidden');
+        infoMessage.textContent = 'We are closed on Mondays.';
+        return;
+      } else {
+        clearFieldError('date');
+      }
+
+      // Determine booking type to set appropriate min/max
+      const type = getBookingType();
+
+      // Opening hours mapping
+      // Saturday (6): open 10:00-16:00; Tue-Fri (2-5) & Sun (0): 11:00-16:00; Monday closed
+      let minTime = (day === 6) ? '10:00' : '11:00';
+      let maxTime = '16:00';
+
+      if (type === 'afternoon_tea') {
+        // Afternoon Tea served 11:30 - 14:30
+        minTime = '11:30';
+        maxTime = '14:30';
+      } else if (type === 'regular') {
+        // Regular bookings: first slot at opening; last slot 1 hour before close (close 16:00 -> last 15:00)
+        maxTime = '15:00';
+      } else {
+        // booking type not selected: allow full opening hours up to close
+        maxTime = '16:00';
+      }
+
+      // Populate select with 15-minute slots between minTime and maxTime
+      const sel = document.getElementById('time');
+      if (sel) {
+        sel.innerHTML = '';
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Select a time';
+        sel.appendChild(placeholder);
+
+        const [minH, minM] = minTime.split(':').map(Number);
+        const [maxH, maxM] = maxTime.split(':').map(Number);
+        let start = minH * 60 + minM;
+        const end = maxH * 60 + maxM;
+        while (start <= end) {
+          const h = Math.floor(start / 60).toString().padStart(2, '0');
+          const m = (start % 60).toString().padStart(2, '0');
+          const opt = document.createElement('option');
+          opt.value = `${h}:${m}`;
+          opt.textContent = `${h}:${m}`;
+          sel.appendChild(opt);
+          start += 15;
+        }
+
+        // enable select
+        sel.disabled = false;
+      }
+
+      // If current time value is outside new bounds, clear it
+      if (timeInput.value) {
+        if (timeInput.value < minTime || timeInput.value > maxTime) {
+          timeInput.value = '';
+        }
+      }
+
+      // Informative hint for screen reader / users
+      infoMessage.classList.remove('hidden');
+      infoMessage.textContent = `Available times: ${minTime} to ${maxTime} in 15 minute intervals.`;
+    }
+
+    function validateTeaTiming(live = false) {
+      clearFieldError('date');
+      clearFieldError('time');
+
+      const type = getBookingType();
+      const errors = [];
+
+      if (type !== 'afternoon_tea') {
+        showErrors([], { focusSummary: false });
+        return [];
+      }
+
+      const bookingDateTime = getBookingDateTime();
+      if (!bookingDateTime) {
+        if (!live) {
+          errors.push({ fieldId: 'date', message: 'Choose a date and time for your Afternoon Tea.' });
+          setFieldError('date', 'Choose a date for your Afternoon Tea.');
+          setFieldError('time', 'Choose a time for your Afternoon Tea.');
+        }
+        showErrors(errors, { focusSummary: !live });
+        return errors;
+      }
+
+      const day = bookingDateTime.getDay(); // 0=Sun,1=Mon,...,6=Sat
+      const minutes = bookingDateTime.getHours() * 60 + bookingDateTime.getMinutes();
+      const minMinutes = 11 * 60 + 30; // 11:30
+      const maxMinutes = 14 * 60 + 30; // 14:30
+      const now = new Date();
+      const diffMs = bookingDateTime.getTime() - now.getTime();
+      const minNoticeMs = 48 * 60 * 60 * 1000; // 48 hours
+
+      if (day === 1) {
+        errors.push({
+          fieldId: 'date',
+          message: 'Afternoon Tea is served Tuesday to Sunday – choose a date between Tuesday and Sunday.'
+        });
+        setFieldError('date', 'Afternoon Tea is served Tuesday to Sunday – please choose another date.');
+      }
+
+      if (minutes < minMinutes || minutes > maxMinutes) {
+        errors.push({ fieldId: 'time', message: 'Afternoon Tea bookings must be between 11:30am and 2:30pm.' });
+        setFieldError('time', 'Choose a time between 11:30am and 2:30pm for Afternoon Tea.');
+      }
+
+      if (diffMs < minNoticeMs) {
+        errors.push({ fieldId: 'date', message: 'Afternoon Tea bookings must be made at least 48 hours in advance.' });
+        setFieldError('date', 'Afternoon Tea bookings must be made at least 48 hours in advance.');
+      }
+
+      showErrors(errors, { focusSummary: !live });
+      return errors;
+    }
+
+    /* ===== SUMMARY HELPERS ===== */
+    function readablePaymentMethod(method) {
+      if (method === 'buyagift') return 'Buyagift voucher';
+      if (method === 'artea_voucher') return 'The Artea Room gift voucher';
+      if (method === 'pay_on_day') return 'Pay on the day';
+      return method || '';
+    }
+
+    function readableTeaPackage(value) {
+      const map = {
+        buyagift_regular: 'Buyagift Regular Afternoon Tea',
+        buyagift_luxury: 'Buyagift Luxury Afternoon Tea',
+        artea_signature: 'The Artea Room Signature Afternoon Tea',
+        artea_signature_bubbles: 'The Artea Room Signature Afternoon Tea with Prosecco or Nozecco',
+        signature_25: 'Signature Afternoon Tea (£25)',
+        signature_bubbles_30: 'Signature Afternoon Tea with Prosecco or Nozecco (£30)'
+      };
+      return map[value] || value || '';
+    }
+
+    /* ===== BUILD NICE BOOKING SUMMARY FOR EMAIL ===== */
+    function buildBookingSummary() {
+      const bookingTypeReadable = getBookingType() === 'afternoon_tea'
+        ? 'Afternoon Tea booking'
+        : 'Regular table booking';
+
+      const dateUk = dateInput.value
+        ? dateInput.value.split('-').reverse().join('/')
+        : '';
+
+      const firstName = document.getElementById('first_name').value.trim();
+      const lastName = document.getElementById('last_name').value.trim();
+      const emailVal = document.getElementById('email').value.trim();
+      const telVal = document.getElementById('tel').value.trim();
+      const guestCountStr = partySizeSelect.value;
+      const guestCount = parseInt(guestCountStr, 10);
+      const otherReqs = document.getElementById('other_requirements').value.trim();
+
+      // Build plain-text summary for submission (kept for Formspree/email)
+      const lines = [];
+      lines.push('BOOKING DETAILS');
+      lines.push('------------------------------');
+      lines.push(`Booking type: ${bookingTypeReadable}`);
+      lines.push(`Date: ${dateUk}`);
+      lines.push(`Time: ${timeInput.value}`);
+      lines.push(`Number of guests: ${guestCountStr}`);
+      lines.push('');
+      lines.push('CONTACT DETAILS');
+      lines.push('------------------------------');
+      lines.push(`Name: ${firstName} ${lastName}`);
+      lines.push(`Email: ${emailVal}`);
+      lines.push(`Telephone: ${telVal}`);
+      lines.push('');
+
+      // Build structured HTML for on-page review
+      const reviewEl = document.getElementById('review-summary');
+      reviewEl.innerHTML = '';
+
+      function addSection(title, rows) {
+        const sec = document.createElement('div');
+        sec.className = 'review-section';
+        const h = document.createElement('h3');
+        h.textContent = title;
+        sec.appendChild(h);
+
+        rows.forEach(r => {
+          const lab = document.createElement('div');
+          lab.className = 'review-label';
+          lab.textContent = r.label;
+          const val = document.createElement('div');
+          val.className = 'review-value';
+          val.innerHTML = r.value || '';
+          sec.appendChild(lab);
+          sec.appendChild(val);
+        });
+
+        reviewEl.appendChild(sec);
+      }
+
+      // Booking details section
+      addSection('Booking details', [
+        { label: 'Type', value: bookingTypeReadable },
+        { label: 'Date', value: dateUk },
+        { label: 'Time', value: timeInput.value },
+        { label: 'Guests', value: guestCountStr }
+      ]);
+
+      // Contact details
+      addSection('Contact details', [
+        { label: 'Name', value: `${firstName} ${lastName}` },
+        { label: 'Email', value: `<a href="mailto:${emailVal}">${emailVal}</a>` },
+        { label: 'Telephone', value: telVal }
+      ]);
+
+      if (getBookingType() === 'afternoon_tea') {
+        const method = getPaymentMethod();
+        const pkg = teaPackageSelect.value;
+
+        addSection('Afternoon Tea', [
+          { label: 'Voucher / payment', value: readablePaymentMethod(method) },
+          { label: 'Tea option', value: readableTeaPackage(pkg) }
+        ]);
+
+        if (method === 'buyagift' || method === 'artea_voucher') {
+          const covers = parseInt(voucherCoversInput.value, 10);
+          const additional = (!isNaN(guestCount) && !isNaN(covers)) ? Math.max(guestCount - covers, 0) : '';
+          addSection('Voucher details', [
+            { label: 'Voucher number', value: voucherNumberInput.value.trim() },
+            { label: 'Guests covered', value: voucherCoversInput.value },
+            { label: 'Additional paying on day', value: String(additional) }
+          ]);
+        }
+
+        // Dietary requirements
+        const dietRows = [];
+        lines.push('DIETARY REQUIREMENTS');
+        lines.push('------------------------------');
+        if (!isNaN(guestCount)) {
+          for (let i = 1; i <= guestCount; i++) {
+            const type = bookingForm.querySelector(`input[name="guest_${i}_type"]:checked`)?.value || '';
+            const diet = bookingForm.querySelector(`select[name="guest_${i}_diet"]`)?.value || '';
+            const notes = bookingForm.querySelector(`textarea[name="guest_${i}_diet_notes"]`)?.value || '';
+
+            dietRows.push({ label: `Guest ${i}`, value: `${type || 'n/a'} — ${diet || 'n/a'}${notes.trim() ? `<div style="margin-top:6px;color:#55646e;font-size:0.92rem">${notes.trim()}</div>` : ''}` });
+
+            lines.push(`Guest ${i}: ${type || 'n/a'}`);
+            lines.push(`Diet: ${diet || 'n/a'}`);
+            if (notes.trim()) lines.push(`Notes: ${notes.trim()}`);
+            lines.push('');
+          }
+        }
+
+        if (dietRows.length) addSection('Dietary requirements', dietRows);
+      }
+
+      if (otherReqs) {
+        addSection('Other requirements', [{ label: 'Notes', value: otherReqs }]);
+        lines.push('OTHER REQUIREMENTS');
+        lines.push('------------------------------');
+        lines.push(otherReqs);
+        lines.push('');
+      }
+
+      // Keep plain-text field for form submission
+      bookingSummaryField.value = lines.join('\n');
+    }
+
+    // Live validation when changing date/time
+    dateInput.addEventListener('change', () => { validateTeaTiming(true); updateTimeConstraints(); updateTimeHintVisibility(); updateBuyagiftAvailability(); updateTeaPackageOptions(); });
+    timeInput.addEventListener('change', () => validateTeaTiming(true));
+
+    /* ===== FORM SUBMIT VALIDATION ===== */
+    bookingForm.addEventListener('submit', (event) => {
+      clearAllErrors();
+
+      const errors = [];
+
+      function requireField(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+        const value = (field.value || '').trim();
+        if (!value) {
+          errors.push({ fieldId, message });
+          setFieldError(fieldId, message);
+        }
+      }
+
+      requireField('first_name', 'Enter a first name.');
+      requireField('last_name', 'Enter a last name.');
+      requireField('email', 'Enter an email address.');
+      requireField('tel', 'Enter a telephone number.');
+      requireField('date', 'Enter a date.');
+      requireField('time', 'Enter a time.');
+      requireField('party_size', 'Select the number of guests.');
+
+      const bookingType = getBookingType();
+      if (!bookingType) {
+        errors.push({
+          fieldId: 'booking_type',
+          message: 'Select whether you are booking a regular table or an Afternoon Tea.'
+        });
+        document.getElementById('form-group-booking_type').classList.add('form-group--error');
+      }
+
+      if (bookingType === 'afternoon_tea') {
+        // At least 2 guests
+        const size = parseInt(partySizeSelect.value, 10);
+        if (!isNaN(size) && size < 2) {
+          errors.push({ fieldId: 'party_size', message: 'Afternoon Tea bookings are for at least 2 guests.' });
+          setFieldError('party_size', 'Afternoon Tea bookings are for at least 2 guests.');
+        }
+
+        // Payment method required
+        const method = getPaymentMethod();
+        if (!method) {
+          errors.push({ fieldId: 'payment_method', message: 'Select whether you are using a voucher or paying on the day.' });
+          document.getElementById('form-group-payment_method').classList.add('form-group--error');
+        }
+
+        // Tea package required once method selected
+        requireField('tea_package', 'Select an Afternoon Tea option.');
+
+        // Voucher requirements (only if voucher route)
+        if (method === 'buyagift' || method === 'artea_voucher') {
+          requireField('voucher_number', 'Enter the voucher number.');
+          requireField('voucher_covers', 'Enter how many guests your voucher covers.');
+
+          const guests = parseInt(partySizeSelect.value, 10);
+          const covers = parseInt(voucherCoversInput.value, 10);
+
+          if (!isNaN(guests) && !isNaN(covers)) {
+            if (covers < 1) {
+              errors.push({ fieldId: 'voucher_covers', message: 'Voucher cover must be at least 1 guest.' });
+              setFieldError('voucher_covers', 'Voucher cover must be at least 1 guest.');
+            }
+            if (covers > guests) {
+              errors.push({ fieldId: 'voucher_covers', message: 'Voucher cover cannot be more than the total number of guests.' });
+              setFieldError('voucher_covers', 'Voucher cover cannot be more than the total number of guests.');
+            }
+          }
+        } else {
+          clearFieldError('voucher_number');
+          clearFieldError('voucher_covers');
+        }
+
+        // Every guest must have a dietary selection
+        const totalGuests = parseInt(partySizeSelect.value, 10);
+        if (!isNaN(totalGuests)) {
+          let missingDiet = false;
+          for (let i = 1; i <= totalGuests; i++) {
+            const sel = bookingForm.querySelector(`select[name="guest_${i}_diet"]`);
+            if (sel && !sel.value) {
+              missingDiet = true;
+              sel.classList.add('guest-diet-error');
+              sel.setAttribute('aria-invalid', 'true');
+            }
+          }
+          if (missingDiet) {
+            errors.push({ fieldId: 'party_size', message: 'Select a dietary requirement for each guest.' });
+          }
+        }
+
+        // Timing rules
+        const teaErrors = validateTeaTiming(false);
+        errors.push(...teaErrors);
+      }
+
+      if (errors.length > 0) {
+        event.preventDefault();
+        showErrors(errors, { focusSummary: true });
+        return;
+      }
+
+      // Convert date from ISO format (YYYY-MM-DD) to UK format (DD/MM/YYYY) for Formspree
+      if (dateInput.value) {
+        const dateUkFormat = dateInput.value.split('-').reverse().join('/');
+        document.getElementById('date_formatted').value = dateUkFormat;
+      }
+
+      buildBookingSummary();
+      showErrors([], { focusSummary: false });
+    });
+
+    // Initialise on load
+    updatePartySizeOptions();
+    updateTimeConstraints();
+    updateTimeHintVisibility();
+    updateBuyagiftAvailability();
+    updateAfternoonInfoVisibility();
+
+    /* ===== MULTI-STEP NAVIGATION ===== */
+    (function(){
+      const stepMeta = document.getElementById('step-meta');
+      const progressBar = document.getElementById('progress-bar');
+      const allStepEls = Array.from(document.querySelectorAll('.step'));
+
+      function getVisibleSteps() {
+        return allStepEls.filter(s => {
+          if (s.dataset.step === 'afternoon') {
+            return getBookingType() === 'afternoon_tea';
+          }
+          return true;
+        });
+      }
+
+      function currentVisibleIndex() {
+        const visible = getVisibleSteps();
+        return visible.findIndex(s => s.classList.contains('active'));
+      }
+
+      function showStepByIndex(idx) {
+        const visible = getVisibleSteps();
+        if (visible.length === 0) return;
+        if (idx < 0) idx = 0;
+        if (idx >= visible.length) idx = visible.length - 1;
+
+        allStepEls.forEach(s => s.classList.remove('active'));
+        visible.forEach(s => s.classList.remove('hidden'));
+        // hide conditional afternoon step if not applicable
+        allStepEls.forEach(s => {
+          if (s.dataset.step === 'afternoon' && getBookingType() !== 'afternoon_tea') {
+            s.classList.add('hidden');
+          }
+        });
+
+        const active = visible[idx];
+        active.classList.add('active');
+
+        // update progress
+        const percent = Math.round(((idx + 1) / visible.length) * 100);
+        progressBar.style.width = percent + '%';
+        if (stepMeta) stepMeta.textContent = `Step ${idx + 1} of ${visible.length}`;
+
+        // focus first form control
+        const first = active.querySelector('input,select,textarea,button');
+        if (first) first.focus();
+      }
+
+      function validateStep(stepEl) {
+        clearAllErrors();
+        const errors = [];
+
+        // validate required inputs, selects, textareas
+        const reqs = stepEl.querySelectorAll('input[required], select[required], textarea[required]');
+        reqs.forEach(el => {
+          const tag = el.tagName.toLowerCase();
+          const val = (el.value || '').trim();
+          if (tag === 'input' && el.type === 'radio') return; // radios handled separately
+          if (!val) {
+            const id = el.id || el.name;
+            errors.push({ fieldId: id, message: 'This field is required.' });
+            if (id) setFieldError(id, 'Enter a value.');
+          }
+        });
+
+        // radios: check groups with required radios
+        const radioNames = Array.from(new Set(Array.from(stepEl.querySelectorAll('input[type="radio"][required]')).map(r => r.name)));
+        radioNames.forEach(name => {
+          const checked = bookingForm.querySelector(`input[name="${name}"]:checked`);
+          if (!checked) {
+            errors.push({ fieldId: name, message: 'Select an option.' });
+            const group = document.getElementById('form-group-' + name) || document.getElementById('form-group-' + name.replace(/_/g,'-'));
+            if (group) group.classList.add('form-group--error');
+          }
+        });
+
+        // special-case: afternoon step dietary selects must be chosen for generated guests
+        if (stepEl.dataset.step === 'afternoon') {
+          // ensure payment method chosen
+          const method = getPaymentMethod();
+          if (!method) {
+            errors.push({ fieldId: 'payment_method', message: 'Select whether you are using a voucher or paying on the day.' });
+            const group = document.getElementById('form-group-payment_method');
+            if (group) group.classList.add('form-group--error');
+          }
+
+          const guestSelects = stepEl.querySelectorAll('select[name^="guest_"]');
+          guestSelects.forEach(sel => {
+            if (!sel.value) {
+              sel.classList.add('guest-diet-error');
+              sel.setAttribute('aria-invalid', 'true');
+              errors.push({ fieldId: sel.name, message: 'Select a dietary requirement for each guest.' });
+            }
+          });
+
+          // If payment method requires a voucher, voucher number must be provided
+          if (method === 'buyagift' || method === 'artea_voucher') {
+            const v = (voucherNumberInput.value || '').trim();
+            if (!v) {
+              errors.push({ fieldId: 'voucher_number', message: 'Enter the voucher number.' });
+              setFieldError('voucher_number', 'Enter the voucher number.');
+            }
+          }
+        }
+
+        // booking step: enforce opening hours (closed Mondays) and Afternoon Tea timing rules when Afternoon Tea selected
+        if (stepEl.dataset.step === 'booking') {
+            // enforce opening hours and set `day` for the block
+            const dateStr = dateInput.value;
+            let day = null;
+            if (dateStr) {
+              const p = dateStr.split('-').map(Number);
+              if (p.length === 3) {
+                const dateObj = new Date(p[0], p[1] - 1, p[2]);
+                day = dateObj.getDay();
+                if (day === 1) {
+                  errors.push({ fieldId: 'date', message: 'We are closed on Mondays. Please choose another date.' });
+                  setFieldError('date', 'We are closed on Mondays.');
+                }
+              }
+            }
+
+            // enforce time bounds depending on booking type
+            const type = getBookingType();
+            // compute min/max similar to updateTimeConstraints
+            let minTime = (day === 6) ? '10:00' : '11:00';
+            let maxTime = '16:00';
+            if (type === 'afternoon_tea') {
+              minTime = '11:30';
+              maxTime = '14:30';
+            } else if (type === 'regular') {
+              maxTime = '15:00';
+            }
+
+            // Validate time value format and bounds
+            if (timeInput.value) {
+              const timeVal = timeInput.value;
+              const parts = timeVal.split(':').map(Number);
+              if (parts.length >= 2) {
+                const hh = parts[0];
+                const mm = parts[1];
+                // enforce 15-minute increments
+                if (mm % 15 !== 0) {
+                  errors.push({ fieldId: 'time', message: 'Select a time on a 15 minute boundary (eg 11:00, 11:15).' });
+                  setFieldError('time', 'Select a time on a 15 minute boundary.');
+                }
+              } else {
+                errors.push({ fieldId: 'time', message: 'Enter a valid time.' });
+                setFieldError('time', 'Enter a valid time.');
+              }
+
+              if (timeVal < minTime || timeVal > maxTime) {
+                errors.push({ fieldId: 'time', message: `Select a time between ${minTime} and ${maxTime}.` });
+                setFieldError('time', `Select a time between ${minTime} and ${maxTime}.`);
+              }
+            }
+
+            if (type === 'afternoon_tea') {
+              const teaErrors = validateTeaTiming(true);
+              if (teaErrors && teaErrors.length) errors.push(...teaErrors);
+            }
+        }
+
+        if (errors.length) {
+          showErrors(errors, { focusSummary: true });
+          return false;
+        }
+        return true;
+      }
+
+      // wire up next/prev buttons
+      document.querySelectorAll('[data-action="next"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const active = document.querySelector('.step.active') || allStepEls[0];
+          if (!validateStep(active)) return;
+          // move to next visible
+          const idx = currentVisibleIndex();
+          showStepByIndex(idx + 1);
+          // if moved to review, build summary
+          const visible = getVisibleSteps();
+          const newIdx = currentVisibleIndex();
+          const newStep = visible[newIdx];
+          if (newStep && newStep.dataset.step === 'review') {
+            buildBookingSummary();
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-action="prev"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = currentVisibleIndex();
+          showStepByIndex(idx - 1);
+        });
+      });
+
+      // when booking type changes, recompute steps and show/hide afternoon step
+      bookingTypeInputs.forEach(input => {
+        input.addEventListener('change', () => {
+          // if user changed to regular while on afternoon step, jump forward/back to valid step
+          const visible = getVisibleSteps();
+          const idx = currentVisibleIndex();
+          if (idx === -1) showStepByIndex(0);
+          else showStepByIndex(idx);
+          updateTimeHintVisibility();
+          updateAfternoonInfoVisibility();
+          updateBuyagiftAvailability();
+        });
+      });
+
+      // on final submit, existing submit handler will run. But when submitting from review step, build summary first
+      bookingForm.addEventListener('submit', (e) => {
+        // ensure the review step's summary is up-to-date
+        buildBookingSummary();
+      });
+
+      // initialise
+      showStepByIndex(0);
+    })();
+  </script>
+</body>
+</html>
