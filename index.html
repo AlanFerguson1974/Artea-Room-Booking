@@ -978,6 +978,35 @@
         // Afternoon Tea served 11:30 - 14:30
         minTime = '11:30';
         maxTime = '14:30';
+
+        // Valentine's Day 2026 special: only 12:30 and 14:30 available
+        const isValentines = (y === 2026 && m === 2 && d === 14);
+        if (isValentines) {
+          const sel = document.getElementById('time');
+          if (sel) {
+            sel.innerHTML = '';
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Select a time';
+            sel.appendChild(placeholder);
+
+            const option1 = document.createElement('option');
+            option1.value = '12:30';
+            option1.textContent = '12:30';
+            sel.appendChild(option1);
+
+            const option2 = document.createElement('option');
+            option2.value = '14:30';
+            option2.textContent = '14:30';
+            sel.appendChild(option2);
+
+            sel.disabled = false;
+          }
+
+          infoMessage.classList.remove('hidden');
+          infoMessage.textContent = 'Valentine\'s Day special: Our themed Afternoon Tea is available at 12:30 or 14:30 only. This is by advance booking only and served as a relaxed 90-minute experience.';
+          return; // skip the normal time slot generation below
+        }
       } else if (type === 'regular') {
         // Regular bookings: first slot at opening; last slot 1 hour before close (close 16:00 -> last 15:00)
         maxTime = '15:00';
