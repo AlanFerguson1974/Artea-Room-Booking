@@ -979,32 +979,26 @@
         minTime = '11:30';
         maxTime = '14:30';
 
-        // Valentine's Day 2026 special: only 12:30 and 14:30 available
+        // Valentine's Day 2026: fully booked
         const isValentines = (y === 2026 && m === 2 && d === 14);
         if (isValentines) {
-          const sel = document.getElementById('time');
-          if (sel) {
-            sel.innerHTML = '';
-            const placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.textContent = 'Select a time';
-            sel.appendChild(placeholder);
-
-            const option1 = document.createElement('option');
-            option1.value = '12:30';
-            option1.textContent = '12:30';
-            sel.appendChild(option1);
-
-            const option2 = document.createElement('option');
-            option2.value = '14:30';
-            option2.textContent = '14:30';
-            sel.appendChild(option2);
-
-            sel.disabled = false;
-          }
-
+          timeInput.value = '';
+          timeInput.disabled = true;
+          setFieldError('date', 'We are now fully booked for Valentine\'s Day and are unable to accept any further table reservations.');
+          
           infoMessage.classList.remove('hidden');
-          infoMessage.textContent = 'Valentine\'s Day special: Our themed Afternoon Tea is available at 12:30 or 14:30 only. This is by advance booking only and served as a relaxed 90-minute experience.';
+          infoMessage.innerHTML = `
+            <strong>Valentine's Day booking notice</strong>
+            <p style="margin: 0.5rem 0 0 0; line-height: 1.5;">
+              We are now fully booked for Valentine's Day and are unable to accept any further table reservations.
+            </p>
+            <p style="margin: 0.5rem 0 0 0; line-height: 1.5;">
+              A small number of tables may become available for walk-in customers, offered on a first come, first served basis.
+            </p>
+            <p style="margin: 0.5rem 0 0 0; line-height: 1.5;">
+              Thank you for your understanding and support. We look forward to welcoming you soon.
+            </p>
+          `;
           return; // skip the normal time slot generation below
         }
       } else if (type === 'regular') {
